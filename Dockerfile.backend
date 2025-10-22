@@ -1,0 +1,22 @@
+# Use a recent Node LTS version
+FROM node:18-alpine
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy package.json and package-lock.json to install dependencies
+# This is a key Docker best practice for caching
+COPY ./backend/package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the rest of the application code (will be overwritten by volume in docker-compose)
+COPY ./backend/ .
+
+# Command to run the backend (overridden by 'command' in docker-compose if needed)
+CMD ["npm", "start"]
+
+# Expose the internal port 5000 (as defined in server.js)
+EXPOSE 5000
+

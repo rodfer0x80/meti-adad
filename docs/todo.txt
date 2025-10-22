@@ -1,0 +1,11 @@
+[ ] use typescript ./src to ./bin instead of javascript
+
+[ ] make scala cats API basic example working
+
+[ ] logs on reverse proxy for communication host:ip
+[ ] logs on server for CRUD actions with action+user+host:ip
+
+[ ] certificate communication authentication (ZTA) between
+  [ ] reverse proxy && frontend
+  [ ] reverse proxy && server (with ginx for cert auth in same container)
+  [ ] reverse proxy && database (with nginx for cert auth in same container)
