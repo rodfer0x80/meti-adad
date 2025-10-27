@@ -3,19 +3,32 @@ import 'dotenv/config';
 import app from './app.js';
 import { config } from './config.js';
 import logger from './logger.js'; 
+import { connectToDatabase, closeDatabaseConnection } from './database.js';
+
+const { HOST, PORT } = config;
 
 let server;
-const startServer = () => {
-  server = app.listen(config.PORT, config.HOST, () => {
-    logger.info(`Server is running on http://${config.HOST}:${config.PORT}`);
-  }).on('error', (err) => {
-    logger.error(`❌ Server failed to start: ${err.message}`);
-    process.exit(1);
-  });
+const startServer = async () => {
+    try {
+        await connectToDatabase(); 
+
+        server = app.listen(PORT, HOST, () => {
+            logger.info(`Server is running on http://${HOST}:${PORT}`);
+        }).on('error', (err) => {
+            logger.error(`Server failed to start: ${err.message}`);
+            process.exit(1);
+        });
+
+    } catch (e) {
+        logger.error(`Fatal error during startup: ${e.message}`);
+        process.exit(1);
+    }
 };
 
-const shutdown = (signal) => {
+const shutdown = async (signal) => {
   logger.info(`\n\nReceived signal ${signal}. Shutdown...`);
+  
+  await closeDatabaseConnection();
 
   server.close((err) => {
     if (err) {
