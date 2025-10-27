@@ -29,16 +29,13 @@ services:
       dockerfile: Dockerfile.backend
     container_name: adad-backend
     restart: always
-    # Map your local code to the container for hot-reloading
     volumes:
       - ./backend:/app
-      # Prevents node_modules from being overwritten by the volume mount
       - /app/node_modules
     environment:
-      NODE_ENV: development
-      PORT: 5000
       MONGO_URI: mongodb://user:password@mongodb:27017/adad_db?authSource=admin
-    # The backend is exposed internally to NGINX on port 5000
+    env_file:
+      - ./.env
     expose:
       - 5000
     networks:

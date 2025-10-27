@@ -1,12 +1,10 @@
-'use strict';
+import express from 'express';
+import rateLimit from 'express-rate-limit';
+import helmet from 'helmet';
+import morgan from 'morgan';
 
-const express = require('express');
-const rateLimit = require('express-rate-limit');
-const helmet = require('helmet');
-const morgan = require('morgan');
-
-const config = require('./config');
-const logger = require('./logger');
+import { config } from './config.js';
+import logger from './logger.js'; 
 
 const app = express();
 
@@ -40,6 +38,10 @@ const apiLimiter = rateLimit({
 });
 app.use(apiLimiter);
 
+// #TODO: setup DB global const here to use in API endpoints at ./app.js
+// Database MongoDB
+
+
 /**
  * API ROUTES
  */
@@ -49,12 +51,13 @@ app.get('/status', (req, res) => {
   res.status(200).json({
     status: 'OK',
     service: 'METI ADAD Backend',
-    host: process.env.HOST,
+    host: config.HOST,
     port: config.PORT,
     uptime: process.uptime() + ' seconds',
   });
 });
 
+// #NOTE: Use DB accordingly in the endpoints from the global const in ./server.js
 
 
 /**
@@ -90,4 +93,7 @@ app.use((err, req, res, next) => {
 });
 
 
-module.exports = app;
+
+
+
+export default app;

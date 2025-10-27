@@ -1,16 +1,13 @@
-'use strict';
+import 'dotenv/config';
 
-require('dotenv').config(); // Must be called b4 ./config
-
-const app = require('./app');
-const { PORT, HOST } = require('./config');
-const logger = require('./logger');
+import app from './app.js';
+import { config } from './config.js';
+import logger from './logger.js'; 
 
 let server;
-
 const startServer = () => {
-  server = app.listen(PORT, HOST, () => {
-    logger.info(`Server is running on http://${HOST}:${PORT}`);
+  server = app.listen(config.PORT, config.HOST, () => {
+    logger.info(`Server is running on http://${config.HOST}:${config.PORT}`);
   }).on('error', (err) => {
     logger.error(`❌ Server failed to start: ${err.message}`);
     process.exit(1);
@@ -36,6 +33,8 @@ const shutdown = (signal) => {
   }, 1000).unref();
 };
 
+
+// Start server and catch process signals
 startServer();
 
 process.on('unhandledRejection', (reason, promise) => {
@@ -51,3 +50,4 @@ process.on('uncaughtException', (error) => {
 
 process.on('SIGTERM', () => shutdown('SIGTERM'));
 process.on('SIGINT', () => shutdown('SIGINT'));   
+

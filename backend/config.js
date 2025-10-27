@@ -1,10 +1,8 @@
-'use strict';
+const HOST = process.env.HOST || '127.0.0.1';
+const PORT = parseInt(process.env.PORT, 10) || 5000;
 
-const config = {
-    HOST: process.env.HOST || '127.0.0.1', 
-    PORT: parseInt(process.env.PORT, 10) || 5000,
+export const config = { 
+    HOST,
+    PORT,
 };
 
-Object.freeze(config);
-
-module.exports = config;
