@@ -1,21 +1,80 @@
 services:
   # ------------------------------------
-  # 1. MongoDB Database
+  # 1. SHARDING INFRASTRUCTURE
   # ------------------------------------
-  mongodb:
-    image: mongo:6.0
-    container_name: adad-mongodb
-    restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: user
-      MONGO_INITDB_ROOT_PASSWORD: password
-      PORT: 27017
+
+  # --- 1.1 CONFIG SERVER ---
+  configsvr:
+    image: mongo:latest
+    container_name: configsvr
+    command: mongod --configsvr --replSet configReplSet --port 27019 --bind_ip_all --dbpath /data/db
     volumes:
-      - mongo_data:/data/db
-    expose:
-      - 27017
+      - ./database/configdb:/data/db # Maps local directory to container
+    ports:
+      - "27019:27019"
+    networks:
+      - adad_network # Using the main application network
+
+  # --- 1.2 SHARD 1 ---
+  shard1:
+    image: mongo:latest
+    container_name: shard1
+    command: mongod --shardsvr --replSet shard1ReplSet --port 27018 --bind_ip_all --dbpath /data/db
+    volumes:
+      - ./database/shard1db:/data/db # Maps local directory to container
+    ports:
+      - "27018:27018"
     networks:
       - adad_network
+
+  # --- 1.3 SHARD 2 ---
+  shard2:
+    image: mongo:latest
+    container_name: shard2
+    command: mongod --shardsvr --replSet shard2ReplSet --port 27017 --bind_ip_all --dbpath /data/db
+    volumes:
+      - ./database/shard2db:/data/db # Maps local directory to container
+    ports:
+      - "27017:27017"
+    networks:
+      - adad_network
+
+  # --- 1.4 QUERY ROUTER (mongos) - The New Database Endpoint ---
+  router:
+    image: mongo:latest # Using the standard mongo image
+    container_name: router
+    command: mongos --configdb configReplSet/configsvr:27019 --port 27020 --bind_ip_all
+    ports:
+      - "27020:27020"
+    depends_on:
+      configsvr:
+        condition: service_started
+      shard1:
+        condition: service_started
+      shard2:
+        condition: service_started
+    networks:
+      - adad_network
+
+  # --- 1.5 SHARDING INITIALIZATION SCRIPT (Runs once to configure cluster) ---
+  sharding_init:
+    image: mongo:latest
+    container_name: sharding_init
+    command: /init.sh
+    volumes:
+      - ./database/init.sh:/init.sh
+      - ./database/data:/data # Mounts data for mongoimport
+    networks:
+      - adad_network
+    depends_on:
+      router:
+        condition: service_started # Wait for router to start
+      configsvr:
+        condition: service_started
+      shard1:
+        condition: service_started
+      shard2:
+        condition: service_started
 
   # ------------------------------------
   # 2. Node.js Backend / Express Server
@@ -29,16 +88,16 @@ services:
     volumes:
       - ./backend:/app
       - /app/node_modules
-    environment:
-      MONGO_URI: mongodb://user:password@mongodb:27017/adad_db?authSource=admin
     env_file:
-      - ./.env
+      - ./.env # Reads MONGODB_URI=mongodb://router:27020/adad_db
     expose:
       - 5000
     networks:
       - adad_network
+    # UPDATED DEPENDENCY: The backend waits for the initialization script to complete
     depends_on:
-      - mongodb
+      sharding_init:
+        condition: service_completed_successfully
 
   # ------------------------------------
   # 3. React Frontend Client
@@ -50,9 +109,7 @@ services:
     container_name: adad-frontend
     command: npm run start
     volumes:
-      # Map local code to the container for live-reloading
       - ./frontend:/app
-      # Prevents node_modules from being overwritten by the volume mount
       - /app/node_modules
     expose:
       - 3000
@@ -79,9 +136,11 @@ services:
       - backend
 
 volumes:
+  configdb:
+  shard1db:
+  shard2db:
   mongo_data:
 
 networks:
   adad_network:
     driver: bridge
-
