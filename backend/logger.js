@@ -1,13 +1,14 @@
 import winston from 'winston';
 const { combine, timestamp, printf } = winston.format;
 
+
 const logFormat = printf(({ level, message, timestamp, stack }) => {
   const logMessage = stack || message;
   const formattedMessage = `${timestamp} [${level.toUpperCase()}]: ${logMessage}`;
   return formattedMessage;
 });
 
-// 2. Create the main logger instance
+
 const logger = winston.createLogger({
   level: 'debug',
   format: combine(
