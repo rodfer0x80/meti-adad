@@ -1,3 +1,6 @@
 ./configdb 
 ./shard1db 
 ./shark2db 
+./data/db/.*
+./data/db/*
+./data/configdb
