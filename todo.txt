@@ -1,2 +1,0 @@
-[ ] fix json files
-[ ] fix script init.sh
