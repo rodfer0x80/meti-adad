@@ -7,11 +7,18 @@ const router = express.Router();
 
 // Get first 50 movies
 router.get("/", async (req, res) => {
-  let db = getDatabase();
-  let results = await db.collection('movies').find({})
+  const db = getDatabase();
+  const results = await db.collection('movies').find({})
     .limit(50)
     .toArray();
-  res.send(results).status(200);
+
+  const jsonResults = results.map(doc => ({
+    ...doc,
+    _id: doc._id.toString()
+  }));
+
+  res.status(200).json(jsonResults);
 });
+
 
 export default router;
