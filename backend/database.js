@@ -2,9 +2,11 @@ import { MongoClient } from "mongodb";
 import logger from "./logger.js";
 import { config } from './config.js'; 
 
-const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME } = config;
+//const { DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME } = config;
+const { DB_HOST, DB_PORT, DB_NAME } = config;
 
-const connectionString = `mongodb://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}?authSource=admin`;
+//const connectionString = `mongodb://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}?authSource=admin`;
+const connectionString = `mongodb://${DB_HOST}:${DB_PORT}/${DB_NAME}`;
 const client = new MongoClient(connectionString);
 
 let databaseConnection;

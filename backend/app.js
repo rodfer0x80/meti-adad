@@ -1,61 +1,45 @@
-// app.js
-
 import express from 'express';
 
-import { config } from './config.js'; // For the /status route
-import logger from './logger.js'; // For error handling
+import { config } from './config.js';
+import logger from './logger.js'; 
 import { connectToDatabase, closeDatabaseConnection, checkDatabaseStatus } from './database.js';
-
 import { securityMiddleware } from './middleware/security.js';
 import { loggingMiddleware } from './middleware/logging.js';
+
+import status from './routes/status.js'
+import movies from './routes/movies.js'
+import users from './routes/users.js'
+
 
 const { HOST, PORT } = config;
 
 const app = express();
 
 /**
- * Middleware Application
+ * Middleware 
  */
 app.use(loggingMiddleware);
 app.use(express.json());
 app.use(securityMiddleware);
 
-
 /**
  * API ROUTES
  */
+app.use("/status", status);
 
-// Sanity check endpoint
-app.get('/status', async (req, res) => {
-  const databaseStatus = await checkDatabaseStatus();
-  
-  res.status(200).json({
-    status: 'OK',
-    service: 'METI ADAD Backend',
-    database: databaseStatus.status,
-    host: HOST,
-    port: PORT,
-    uptime: process.uptime() + ' seconds',
-  });
-});
-
-//const db = getDatabase();
-//const collection = db.collection("users");
-//const result = await collection.find({}).toArray();
-
+app.use("/movies", movies);
+app.use("/users", users);
 
 /**
  * Error handling
  */
 //#NOTE: Endpoints > 4xx > 5xx
-
 // Handle 404 
 app.use((req, res, next) => {
   const error = new Error(`Resource Not Found: ${req.originalUrl}`);
   error.status = 404;
   next(error);
 });
-
 
 // Handle 5xx 
 app.use((err, req, res, next) => {
@@ -76,5 +60,6 @@ app.use((err, req, res, next) => {
     },
   });
 });
+
 
 export default app;
