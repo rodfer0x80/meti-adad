@@ -54,7 +54,7 @@ sh.enableSharding("adad_db")
 sh.addShard("shard1ReplSet/$SHARD1");
 sh.addShard("shard2ReplSet/$SHARD2");
 sh.shardCollection("$DB.users",  { _id: 'hashed' });
-sh.shardCollection("$DB.movies", { _id: 'hashed' });
+sh.shardCollection("$DB.events", { _id: 'hashed' });
 sh.startBalancer()
 EOF
 
@@ -71,11 +71,11 @@ else
   log "users.json not found — skipped"
 fi
 
-if [ -f /data/movies.json ]; then
-  mongoimport --host router --port 27020 --db "$DB" --collection movies --file /data/movies.json --jsonArray --quiet
-  log "movies.json imported"
+if [ -f /data/events.json ]; then
+  mongoimport --host router --port 27020 --db "$DB" --collection events --file /data/events.json --jsonArray --quiet
+  log "events.json imported"
 else
-  log "movies.json not found — skipped"
+  log "events.json not found — skipped"
 fi
 
 log "Sharded cluster ready."

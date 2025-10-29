@@ -8,7 +8,7 @@ const router = express.Router();
 // Get first 50 users
 router.get("/", async (req, res) => {
   const db = getDatabase();
-  const results = await db.collection('usrs').find({})
+  const results = await db.collection('users').find({})
     .limit(50)
     .toArray();
 

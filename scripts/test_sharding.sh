@@ -26,8 +26,8 @@ status() {
 # --- Check router container ---
 CONTAINER_ID=$(docker ps -q -f name=${ROUTER_CONTAINER})
 if [ -z "$CONTAINER_ID" ]; then
-  status "❌ The MongoDB router container ('${ROUTER_CONTAINER}') is not running." "$RED"
-  echo "➡️  Run: docker compose up -d"
+  status "The MongoDB router container ('${ROUTER_CONTAINER}') is not running." "$RED"
+  echo "Run: docker compose up -d"
   exit 1
 fi
 
@@ -35,9 +35,9 @@ fi
 section "1. CLUSTER HEALTH (sh.status())"
 echo "Overview of config servers, shards, and sharded collections."
 if docker exec $ROUTER_CONTAINER mongosh --quiet --port $ROUTER_PORT --eval 'sh.status()' > /tmp/cluster_status.log 2>&1; then
-  status "✅ Successfully retrieved cluster status." "$GREEN"
+  status "Successfully retrieved cluster status." "$GREEN"
 else
-  status "⚠️  Failed to retrieve cluster status. Check sharding initialization." "$YELLOW"
+  status "Failed to retrieve cluster status. Check sharding initialization." "$YELLOW"
   cat /tmp/cluster_status.log
 fi
 
@@ -45,28 +45,28 @@ fi
 section "2. USERS SHARD DISTRIBUTION (adad_db.users)"
 if docker exec $ROUTER_CONTAINER mongosh --quiet --port $ROUTER_PORT \
   --eval 'db.getSiblingDB("adad_db").users.getShardDistribution()' > /tmp/users_dist.log 2>&1; then
-  status "✅ Retrieved users shard distribution." "$GREEN"
+  status "Retrieved users shard distribution." "$GREEN"
   cat /tmp/users_dist.log
 else
-  status "⚠️  Could not retrieve users shard distribution." "$YELLOW"
+  status "Could not retrieve users shard distribution." "$YELLOW"
 fi
 
-# --- 3. Movies Collection Shard Distribution ---
-section "3. MOVIES SHARD DISTRIBUTION (adad_db.movies)"
+# --- 3. Events Collection Shard Distribution ---
+section "3. events SHARD DISTRIBUTION (adad_db.events)"
 if docker exec $ROUTER_CONTAINER mongosh --quiet --port $ROUTER_PORT \
-  --eval 'db.getSiblingDB("adad_db").movies.getShardDistribution()' > /tmp/movies_dist.log 2>&1; then
-  status "✅ Retrieved movies shard distribution." "$GREEN"
-  cat /tmp/movies_dist.log
+  --eval 'db.getSiblingDB("adad_db").events.getShardDistribution()' > /tmp/events_dist.log 2>&1; then
+  status "Retrieved events shard distribution." "$GREEN"
+  cat /tmp/events_dist.log
 else
-  status "⚠️  Could not retrieve movies shard distribution." "$YELLOW"
+  status "Could not retrieve events shard distribution." "$YELLOW"
 fi
 
 # --- Summary ---
 section "SUMMARY"
 if grep -q "shards:" /tmp/cluster_status.log; then
-  status "✅ Sharded cluster appears healthy!" "$GREEN"
+  status "Sharded cluster appears healthy!" "$GREEN"
 else
-  status "❌ Cluster may not be fully initialized or reachable." "$RED"
+  status "Cluster may not be fully initialized or reachable." "$RED"
   exit 1
 fi
 

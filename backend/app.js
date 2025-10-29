@@ -7,7 +7,7 @@ import { securityMiddleware } from './middleware/security.js';
 import { loggingMiddleware } from './middleware/logging.js';
 
 import status from './routes/status.js'
-import movies from './routes/movies.js'
+import events from './routes/events.js'
 import users from './routes/users.js'
 
 
@@ -27,7 +27,7 @@ app.use(securityMiddleware);
  */
 app.use("/status", status);
 
-app.use("/movies", movies);
+app.use("/events", events);
 app.use("/users", users);
 
 /**

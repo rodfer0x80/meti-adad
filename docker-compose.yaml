@@ -58,12 +58,11 @@ services:
       - ./backend:/app
       - /app/node_modules
     env_file:
-      - ./.env # Now reads MONGODB_URI=mongodb://router:27020/adad_db
+      - ./.env 
     expose:
       - 5000
     networks:
       - adad_network
-    # UPDATED DEPENDENCY: The backend now waits for the router (mongos) to be healthy
     depends_on:
       - router
 

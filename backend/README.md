@@ -1,13 +1,21 @@
 # backend
 
-````
-> ENV VARIABLES
-HOST - default 127.0.0.1; set to 0.0.0.0 for Docker
-PORT - default 5000
-````
+# meti-adad
+METI ADAD Project
 
+``` 
+>> REQUIREMENTS
+> nodejs 
+> npm 
+```
 
-```` 
-HOST=0.0.0.0
-PORT=5000
-```` 
+```
+>> ENV VARIABLES CONFIGURATION 
+
+# Local (example)
+HOST="127.0.0.1" 
+PORT="5000"
+DB_HOST="127.0.0.1" 
+DB_PORT="27017"
+DB_NAME="adad_db"
+```
