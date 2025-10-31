@@ -9,7 +9,7 @@
   "scripts": {
     "start": "nodemon server.js",
     "dev": "node server.js",
-    "test": "echo 'Tests not implemented yet. && exit 1"
+    "test": "/usr/bin/env sh ./tests/test.sh"
   },
   "dependencies": {
     "dotenv": "^16.3.1",

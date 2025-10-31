@@ -7,6 +7,7 @@ METI ADAD Project
 >> REQUIREMENTS
 > nodejs 
 > npm 
+> bash (tests)
 ```
 
 ```
@@ -81,14 +82,14 @@ DB_NAME="adad_db"
         :event_id -> event _id 
         ?score -> user score regarding the event
 
-[ ] #C1 => GET /events/nearby/:id => List all neaby events by geo coords in given radius of the user
+[x] #C1 => GET /events/nearby/:id => List all neaby events by geo coords in given radius of the user
     Params: 
         :id -> user _id
         ?lat-> user coordinates for latitude - optional use ones stored in db for this user
         ?lon-> user coordinates for longitude - optional use ones stored in db for this user
-        ?radius -> radius
+        ?radius -> radius in km
 
-[ ] #C2 => GET /events/date => List all events that start after given start date and end before given end date
+[x] #C2 => GET /events/date => List all events that start after given start date and end before given end date
     Params:
         ?start_day -> day 
         ?start_month -> month
@@ -98,11 +99,11 @@ DB_NAME="adad_db"
         ?end_year -> year
 
 
-[ ] #C3 => GET /events/name => List all events that case insensitive match the string given compared to the 'nome_atividade' 
+[x] #C3 => GET /events/name => List all events that case insensitive match the string given compared to the 'nome_atividade' 
     Params:
         ?k -> string
 
-[ ] #C4 => GET /events/free => List all events with keyword \gratuito\ or empty string in 'custo' 
+[x] #C4 => GET /events/free => List all events with keyword \gratuito\ or empty string in 'custo' 
     Params:
         NULL
 ```
