@@ -2,9 +2,9 @@
 [ ] make custom endpoints 
 [ ] add custom HTTP codes by name instead of number in errors.js
 
-[ ] proof check work is done
-
 [ ] clean up code and scripts
+[ ] make code semi-functionali (separate side effects from logic functions and variables)
+[ ] make database into utils.js and connection.js and move all endpoints db usage into utils and call them
 
 [ ] write documentation in backend API.md in docs 
 [ ] make a requirements docs for each section 
