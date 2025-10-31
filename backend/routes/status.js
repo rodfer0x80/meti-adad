@@ -4,12 +4,11 @@ import express from 'express';
 import { checkDatabaseStatus } from '../database.js';
 import { config } from '../config.js';
 
-const { HOST, PORT } = config;
 
+const { HOST, PORT } = config;
 const router = express.Router();
 
 
-// Sanity check endpoint
 router.get('/', async (req, res) => {
   const databaseStatus = await checkDatabaseStatus();
 
@@ -22,10 +21,6 @@ router.get('/', async (req, res) => {
     uptime: process.uptime().toFixed(2) + ' seconds',
   });
 });
-
-//const db = getDatabase();
-//const collection = db.collection("users");
-//const result = await collection.find({}).toArray();
 
 
 export default router;

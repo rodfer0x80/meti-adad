@@ -1,9 +1,12 @@
 import express from "express";
 import { ObjectId } from "mongodb";
+
 import { getDatabase } from "../../../database.js";
 import logger from "../../../logger.js";
 
+
 const router = express.Router();
+
 
 // Haversine formula (km)
 // https://stackoverflow.com/questions/14560999/using-the-haversine-formula-in-javascript
@@ -82,5 +85,5 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-export default router;
 
+export default router;

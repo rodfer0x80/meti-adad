@@ -7,6 +7,7 @@ import { getDatabase } from '../../database.js';
 
 const router = express.Router();
 
+
 router.delete("/:id", async (req, res, next) => {
   const db = getDatabase();
   const userId = req.params.id;
@@ -36,5 +37,6 @@ router.delete("/:id", async (req, res, next) => {
     next(error); // Pass to the global error handler
   }
 });
+
 
 export default router;

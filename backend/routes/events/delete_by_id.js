@@ -7,6 +7,7 @@ import logger from '../../logger.js';
 
 const router = express.Router();
 
+
 router.delete("/:id", async (req, res, next) => {
   const db = getDatabase();
   const eventId = req.params.id;
@@ -36,5 +37,6 @@ router.delete("/:id", async (req, res, next) => {
     next(error);
   }
 });
+
 
 export default router;

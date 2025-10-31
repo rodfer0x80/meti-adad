@@ -1,22 +1,19 @@
 import { ObjectId } from "mongodb";
 import express from "express";
+
 import { getDatabase } from "../database.js";
 import logger from "../logger.js";
 
+
 const router = express.Router();
 
-/* -----------------------------
-   Helper: Validate user input
------------------------------ */
+
 const validateUser = (user) => {
   const nome = user.nome;
   if (!nome || typeof nome !== "string") return "Missing or invalid 'nome'/'nome'.";
   return null;
 };
 
-/* -----------------------------
-   Helper: Standardize user data
------------------------------ */
 const standardizeUserData = (userData) => {
   const nome = userData.nome || userData.nome;
 
@@ -33,9 +30,6 @@ const standardizeUserData = (userData) => {
   };
 };
 
-/* -----------------------------
-   GET /users — Paginated fetch
------------------------------ */
 router.get("/", async (req, res, next) => {
   const db = getDatabase();
   let page = parseInt(req.query.page) || 1;
@@ -74,9 +68,6 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-/* -----------------------------
-   POST /users — Create user(s)
------------------------------ */
 router.post("/", async (req, res, next) => {
   const db = getDatabase();
   const data = req.body;
@@ -137,5 +128,5 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-export default router;
 
+export default router;

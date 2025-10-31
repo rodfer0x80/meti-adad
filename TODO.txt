@@ -1,15 +1,15 @@
-[ ] add common endpoints
-[ ] make custom endpoints 
-[ ] add custom HTTP codes by name instead of number in errors.js
+[x] add common endpoints
+[x] make custom endpoints 
 
 [ ] clean up code and scripts
+[ ] add custom HTTP codes by name instead of number in errors.js
 [ ] make code semi-functionali (separate side effects from logic functions and variables)
 [ ] make database into utils.js and connection.js and move all endpoints db usage into utils and call them
 
-[ ] write documentation in backend API.md in docs 
+[x] write documentation in backend API.md in docs 
 [ ] make a requirements docs for each section 
-  [ ] e.g. backend node npm 
-  [ ] full app docker docker-compose
+  [x] e.g. backend node npm 
+  [x] full app docker docker-compose
   [ ] frontend npm
   [ ] nginx proxy nginx 
 
@@ -18,8 +18,7 @@
 [ ] add scripts to export databases to ./databases/data (keep a raw copy in ./database/raw)
 
 [ ] write report explaining application parts (backend + database + docker cluster + nginx)
-[ ] write presentation
-[ ] place presentation in docs
+[ ] write presentation (store in ./docs)
 
 [ ] branch backend with final deliverable
-[ ] zip deliverable and submit
+[ ] zip deliverable (only backend) and submit

@@ -1,9 +1,12 @@
 import express from "express";
 import { ObjectId } from "mongodb";
+
 import { getDatabase } from "../../database.js";
 import logger from "../../logger.js";
 
+
 const router = express.Router();
+
 
 router.put("/:id", async (req, res, next) => {
   const db = getDatabase();
@@ -78,5 +81,5 @@ router.put("/:id", async (req, res, next) => {
   }
 });
 
-export default router;
 
+export default router;

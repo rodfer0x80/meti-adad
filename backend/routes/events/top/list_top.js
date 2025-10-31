@@ -1,15 +1,12 @@
 import express from "express";
+
 import { getDatabase } from "../../../database.js";
 import logger from "../../../logger.js";
 
+
 const router = express.Router();
 
-/**
- * GET /events/top/:limit?page=1
- * Lists top-rated events based on average user score (descending)
- * Aggregates data from `users.event_scores`
- * Joins with `events` to include full event info + rating + review count
- */
+
 router.get("/:limit", async (req, res, next) => {
   const db = getDatabase();
   const limitParam = parseInt(req.params.limit, 10);
@@ -21,14 +18,13 @@ router.get("/:limit", async (req, res, next) => {
     return next(error);
   }
 
-  const limit = Math.min(limitParam, 100); // Cap limit for safety
+  const limit = Math.min(limitParam, 100); 
   const skip = (page - 1) * limit;
 
   try {
     const usersCollection = db.collection("users");
     const eventsCollection = db.collection("events");
 
-    // Aggregate event scores from all users
     const eventRatings = await usersCollection
       .aggregate([
         { $unwind: "$event_scores" },
@@ -56,10 +52,8 @@ router.get("/:limit", async (req, res, next) => {
 
     const eventIds = eventRatings.map((r) => r._id);
 
-    // Find full event details
     const events = await eventsCollection.find({ id: { $in: eventIds } }).toArray();
 
-    // Merge ratings with event info
     const results = eventRatings.map((rating) => {
       const event = events.find((e) => e.id === rating._id);
       if (!event) return null;
@@ -83,5 +77,5 @@ router.get("/:limit", async (req, res, next) => {
   }
 });
 
-export default router;
 
+export default router;

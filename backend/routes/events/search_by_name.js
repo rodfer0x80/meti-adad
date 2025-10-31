@@ -1,16 +1,12 @@
 import express from "express";
+
 import { getDatabase } from "../../database.js";
 import logger from "../../logger.js";
 
+
 const router = express.Router();
 
-/**
- * GET /events/name
- * Query params:
- *  ?k -> keyword to match in 'nome_atividade' (case-insensitive)
- *  ?page -> optional pagination page (default 1)
- *  ?limit -> optional limit per page (default 10)
- */
+
 router.get("/name", async (req, res, next) => {
   const db = getDatabase();
   const { k, page = 1, limit = 10 } = req.query;
@@ -28,7 +24,7 @@ router.get("/name", async (req, res, next) => {
     const eventsCollection = db.collection("events");
 
     const query = {
-      nome_atividade: { $regex: keyword, $options: "i" }, // case-insensitive match
+      nome_atividade: { $regex: keyword, $options: "i" }, // case isensitive match
     };
 
     const events = await eventsCollection
@@ -59,5 +55,5 @@ router.get("/name", async (req, res, next) => {
   }
 });
 
-export default router;
 
+export default router;

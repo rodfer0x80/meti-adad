@@ -1,18 +1,12 @@
-# Use a recent Node LTS version for running React development server
 FROM node:18-alpine
 
-# Set the working directory inside the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json
 COPY ./frontend/package*.json ./
 
-# Install dependencies
 RUN npm install
 
-# Copy the rest of the application code (will be overwritten by volume in docker-compose)
 COPY ./frontend/ .
 
-# Expose the internal port 3000 (React Dev Server default)
 EXPOSE 3000
 

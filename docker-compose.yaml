@@ -66,9 +66,6 @@ services:
     depends_on:
       - router
 
-  # ------------------------------------
-  # 3. React Frontend Client
-  # ------------------------------------
   frontend:
     build:
       context: .
@@ -85,9 +82,6 @@ services:
     depends_on:
       - backend
 
-  # ------------------------------------
-  # 4. NGINX Reverse Proxy
-  # ------------------------------------
   nginx:
     image: nginx:stable-alpine
     container_name: adad-nginx-proxy

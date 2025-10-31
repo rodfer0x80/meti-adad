@@ -3,7 +3,9 @@ import express from "express";
 import { getDatabase } from "../../../database.js";
 import logger from "../../../logger.js";
 
+
 const router = express.Router();
+
 
 router.get("/", async (req, res, next) => {
   const db = getDatabase();
@@ -76,5 +78,5 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-export default router;
 
+export default router;

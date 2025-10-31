@@ -7,6 +7,7 @@ import logger from '../../logger.js';
 
 const router = express.Router();
 
+
 router.get("/:id", async (req, res, next) => {
   const db = getDatabase();
   const userId = req.params.id;
@@ -66,5 +67,5 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-export default router;
 
+export default router;
