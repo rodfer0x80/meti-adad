@@ -2,16 +2,23 @@ import express from 'express';
 
 import { config } from './config.js';
 import logger from './logger.js'; 
-import { connectToDatabase, closeDatabaseConnection, checkDatabaseStatus } from './database.js';
 import { securityMiddleware } from './middleware/security.js';
 import { loggingMiddleware } from './middleware/logging.js';
 
 import status from './routes/status.js'
+
 import events from './routes/events.js'
+import events_search_by_id from './routes/events/search_by_id.js'
+import events_delete_by_id from './routes/events/delete_by_id.js'
+import events_nearby from './routes/events/nearby.js'
+
 import users from './routes/users.js'
+import users_search_by_id from './routes/users/search_by_id.js'
+import users_delete_by_id from './routes/users/delete_by_id.js'
 
 
-const { HOST, PORT } = config;
+// #TODO: remove this
+// const { HOST, PORT } = config;
 
 const app = express();
 
@@ -28,7 +35,13 @@ app.use(securityMiddleware);
 app.use("/status", status);
 
 app.use("/events", events);
+app.use("/events", events_search_by_id); 
+app.use("/events", events_delete_by_id); 
+app.use("/events", events_nearby);
+
 app.use("/users", users);
+app.use("/users", users_search_by_id);
+app.use("/users", users_delete_by_id);
 
 /**
  * Error handling

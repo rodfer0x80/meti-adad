@@ -8,6 +8,7 @@ SHARD1="shard1:27018"
 SHARD2="shard2:27017"
 
 log() { echo "[$(date +%H:%M:%S)] $*"; }
+# log() { echo "[$(date +%H:%M:%S)] $*" 2>&1 > /var/log/sharding_init.log; }
 
 init_replset() {
   local host=$1 rs_name=$2 extra=$3
@@ -27,14 +28,13 @@ try {
 }
 EOF
 
-  # Wait for PRIMARY
   until mongosh --host "$host" --quiet --eval "rs.isMaster().ismaster" | grep -q true; do
     printf '.'; sleep 2;
   done
   log " $rs_name is PRIMARY."
 }
 
-# === MAIN ===
+
 log "Starting sharded cluster bootstrap..."
 
 init_replset "$CONFIG" "configReplSet" ', configsvr: true'
@@ -63,7 +63,7 @@ mongosh --host "$ROUTER" --quiet <<EOF
 db.adminCommand({ enableSharding: "$DB" });
 EOF
 
-log "Importing data (if available)..."
+log "Importing data..."
 if [ -f /data/users.json ]; then
   mongoimport --host router --port 27020 --db "$DB" --collection users  --file /data/users.json  --jsonArray --quiet
   log "users.json imported"
@@ -79,5 +79,5 @@ else
 fi
 
 log "Sharded cluster ready."
-touch /init.done
+# touch /init.done
 

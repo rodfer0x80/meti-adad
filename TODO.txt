@@ -1,0 +1,25 @@
+[ ] add common endpoints
+[ ] make custom endpoints 
+[ ] add custom HTTP codes by name instead of number in errors.js
+
+[ ] proof check work is done
+
+[ ] clean up code and scripts
+
+[ ] write documentation in backend API.md in docs 
+[ ] make a requirements docs for each section 
+  [ ] e.g. backend node npm 
+  [ ] full app docker docker-compose
+  [ ] frontend npm
+  [ ] nginx proxy nginx 
+
+[ ] add https to nginx reverse proxy with certs in ./nginx/security being put inside the container and used
+
+[ ] add scripts to export databases to ./databases/data (keep a raw copy in ./database/raw)
+
+[ ] write report explaining application parts (backend + database + docker cluster + nginx)
+[ ] write presentation
+[ ] place presentation in docs
+
+[ ] branch backend with final deliverable
+[ ] zip deliverable and submit

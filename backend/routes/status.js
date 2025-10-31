@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
     database: databaseStatus.status,
     host: HOST,
     port: PORT,
-    uptime: process.uptime() + ' seconds',
+    uptime: process.uptime().toFixed(2) + ' seconds',
   });
 });
 

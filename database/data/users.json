@@ -2,10 +2,110 @@
   {
     "id": "1",
     "registo": "2025-10-29",
-    "ultimo_login": "2026-10-29",
-    "nome": "The Penguin",
+    "ultimo_login": "2025-10-29",
+    "nome": "Che Guevara",
     "localizacao": "Atouguia",
     "latitude": "39.646202919394",
-    "longitude": "-8.6278194414218"
+    "longitude": "-8.6278194414218",
+    "event_scores": [
+      {
+        "event_id": 72628,
+        "score": 5
+      },
+      {
+        "event_id": 71765,
+        "score": 5
+      },
+      {
+        "event_id": "d2f86154-67ca-11f0-8d91-dfe49836bdb3",
+        "score": 2
+      },
+      {
+        "event_id": "2e21bd9e-0819-11f0-a5de-3f14ab34c657",
+        "score": 4
+      },
+      {
+        "event_id": "4de781bc-577a-11f0-a554-53424e99db87",
+        "score": 4
+      },
+      {
+        "event_id": "647989dc-8cc9-11f0-8343-2376e2da4bc2",
+        "score": 5
+      }
+    ]
+  },
+  {
+    "id": "2",
+    "registo": "2025-11-01",
+    "ultimo_login": "2025-11-01",
+    "nome": "Jeremy Corbin",
+    "localizacao": "Porto",
+    "latitude": "41.1579",
+    "longitude": "-8.6291",
+    "event_scores": [
+      {
+        "event_id": 72704,
+        "score": 4
+      },
+      {
+        "event_id": 72700,
+        "score": 1
+      },
+      {
+        "event_id": 72613,
+        "score": 3
+      },
+      {
+        "event_id": "13c61112-67cc-11f0-8dba-677a71bffc3c",
+        "score": 4
+      },
+      {
+        "event_id": "903d8f28-67cb-11f0-b8ad-b72ac521b009",
+        "score": 3
+      },
+      {
+        "event_id": "6a2f8e88-0819-11f0-a789-0711098b66ef",
+        "score": 2
+      }
+    ]
+  },
+  {
+    "id": "3",
+    "registo": "2025-11-01",
+    "ultimo_login": "2026-11-01",
+    "nome": "David Graeber",
+    "localizacao": "Lisboa",
+    "latitude": "38.7223",
+    "longitude": "-9.1393",
+    "event_scores": [
+      {
+        "event_id": 72603,
+        "score": 2
+      },
+      {
+        "event_id": 72628,
+        "score": 1
+      },
+      {
+        "event_id": 71765,
+        "score": 3
+      },
+      {
+        "event_id": "f3e1037c-00f9-11f0-9596-af33b4b46c8d",
+        "score": 2
+      },
+      {
+        "event_id": "6d48a1a2-9f65-11f0-8bf0-6b8219b268bf",
+        "score": 5
+      },
+      {
+        "event_id": "61551570-fd98-11ef-a516-7bce7b50bc37",
+        "score": 5
+      },
+      {
+        "event_id": "3f9832fa-3038-11f0-8b60-d72b4caea9ac",
+        "score": 1
+      }
+    ]
   }
 ]
