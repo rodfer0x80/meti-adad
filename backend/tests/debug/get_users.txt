@@ -5,7 +5,7 @@
   "totalUsers": 3,
   "data": [
     {
-      "_id": "69040bcc790eddaf2d7398ac",
+      "_id": "6904d5849e535e400845d866",
       "id": "1",
       "registo": "2025-10-29",
       "ultimo_login": "2025-10-29",
@@ -41,43 +41,7 @@
       ]
     },
     {
-      "_id": "69040bcc790eddaf2d7398ad",
-      "id": "2",
-      "registo": "2025-11-01",
-      "ultimo_login": "2025-11-01",
-      "nome": "Jeremy Corbin",
-      "localizacao": "Porto",
-      "latitude": "41.1579",
-      "longitude": "-8.6291",
-      "event_scores": [
-        {
-          "event_id": 72704,
-          "score": 4
-        },
-        {
-          "event_id": 72700,
-          "score": 1
-        },
-        {
-          "event_id": 72613,
-          "score": 3
-        },
-        {
-          "event_id": "13c61112-67cc-11f0-8dba-677a71bffc3c",
-          "score": 4
-        },
-        {
-          "event_id": "903d8f28-67cb-11f0-b8ad-b72ac521b009",
-          "score": 3
-        },
-        {
-          "event_id": "6a2f8e88-0819-11f0-a789-0711098b66ef",
-          "score": 2
-        }
-      ]
-    },
-    {
-      "_id": "69040bcc790eddaf2d7398ae",
+      "_id": "6904d5849e535e400845d867",
       "id": "3",
       "registo": "2025-11-01",
       "ultimo_login": "2026-11-01",
@@ -113,6 +77,46 @@
         {
           "event_id": "3f9832fa-3038-11f0-8b60-d72b4caea9ac",
           "score": 1
+        }
+      ]
+    },
+    {
+      "_id": "6904d5849e535e400845d868",
+      "id": "2",
+      "registo": "2025-11-01",
+      "ultimo_login": "2025-11-01",
+      "nome": "Jeremy Corbin",
+      "localizacao": "Porto",
+      "latitude": "41.1579",
+      "longitude": "-8.6291",
+      "event_scores": [
+        {
+          "event_id": 72704,
+          "score": 3
+        },
+        {
+          "event_id": 72700,
+          "score": 1
+        },
+        {
+          "event_id": 72613,
+          "score": 3
+        },
+        {
+          "event_id": "13c61112-67cc-11f0-8dba-677a71bffc3c",
+          "score": 4
+        },
+        {
+          "event_id": "903d8f28-67cb-11f0-b8ad-b72ac521b009",
+          "score": 3
+        },
+        {
+          "event_id": "6a2f8e88-0819-11f0-a789-0711098b66ef",
+          "score": 2
+        },
+        {
+          "event_id": "72603",
+          "score": 3
         }
       ]
     }

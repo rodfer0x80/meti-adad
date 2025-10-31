@@ -1,5 +1,5 @@
-import { ObjectId } from 'mongodb';
 import express from 'express';
+import { ObjectId } from 'mongodb';
 
 import { getDatabase } from '../../database.js';
 import logger from '../../logger.js';

@@ -9,8 +9,8 @@ const router = express.Router();
    Helper: Validate user input
 ----------------------------- */
 const validateUser = (user) => {
-  const name = user.name || user.nome;
-  if (!name || typeof name !== "string") return "Missing or invalid 'name'/'nome'.";
+  const nome = user.nome;
+  if (!nome || typeof nome !== "string") return "Missing or invalid 'nome'/'nome'.";
   return null;
 };
 
@@ -18,10 +18,10 @@ const validateUser = (user) => {
    Helper: Standardize user data
 ----------------------------- */
 const standardizeUserData = (userData) => {
-  const name = userData.name || userData.nome;
+  const nome = userData.nome || userData.nome;
 
   return {
-    name: name.trim(),
+    nome: nome.trim(),
     location: userData.location || userData.localizacao || null,
     registered_at: userData.registered_at || userData.registo || null,
     last_login: userData.last_login || userData.ultimo_login || null,

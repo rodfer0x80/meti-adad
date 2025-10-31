@@ -63,27 +63,29 @@ DB_NAME="adad_db"
 
 [x] #8 => DELETE /users/:id => remove user by _id 
 
-[ ] #9 => PUT /events/:id => update event data by _id 
+[x] #9 => PUT /events/:id => update event data by _id 
 
-[ ] #10 => PUT /users/:id => update user data by _id 
+[x] #10 => PUT /users/:id => update user data by _id 
 
-[ ] #11 => GET /events/top/:limit => list events by score in descending order. Show all event information . Limit number of events by :limit 
+[x] #11 => GET /events/top/:limit => list events by score in descending order. Show all event information . Limit number of events by :limit 
 
-[ ] #12 => GET /events/ratings/:order => list events by number of reviews. :ord - asc | desc 
+[x] #12 => GET /events/ratings/:order => list events by number of reviews. :ord - asc | desc 
 
-[ ] #13 => GET /events/star => List all events with 5 star score. Show all event information and number of reviews.
+[x] #13 => GET /events/star => List all events with 5 star score. Show all event information and number of reviews.
 
-[ ] #14 => GET /events/:year => List all rated events from :year 
+[x] #14 => GET /events/:year => List all rated events from :year 
 
-[ ] #15 => POST /users/:id/review/:event_id => Add a new review to :event_id from user :id
+[x] #15 => POST /users/:id/review/:event_id => Add a new review to :event_id from user :id
     Params:
         :id -> user _id 
         :event_id -> event _id 
         ?score -> user score regarding the event
 
-[ ] #C1 => GET /events/neaby => List all neaby events by geo coords in given radius of the user
+[ ] #C1 => GET /events/nearby/:id => List all neaby events by geo coords in given radius of the user
     Params: 
-        ?user_coords -> user coordinates latitude and longitude
+        :id -> user _id
+        ?lat-> user coordinates for latitude - optional use ones stored in db for this user
+        ?lon-> user coordinates for longitude - optional use ones stored in db for this user
         ?radius -> radius
 
 [ ] #C2 => GET /events/date => List all events that start after given start date and end before given end date
@@ -103,4 +105,12 @@ DB_NAME="adad_db"
 [ ] #C4 => GET /events/free => List all events with keyword \gratuito\ or empty string in 'custo' 
     Params:
         NULL
+```
+
+
+```
+>> DATABASE
+events
+
+users 
 ```
