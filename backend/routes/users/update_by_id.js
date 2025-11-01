@@ -1,8 +1,9 @@
 import express from "express";
 import { ObjectId } from "mongodb";
 
-import { getDatabase } from "../../database.js";
 import logger from "../../logger.js";
+import HTTP_STATUS from '../../http_status.js';
+import { getDatabase } from "../../database.js";
 
 
 const router = express.Router();
@@ -15,13 +16,13 @@ router.put("/:id", async (req, res, next) => {
 
   if (!ObjectId.isValid(id)) {
     const error = new Error(`Invalid user ID format: ${id}`);
-    error.status = 400;
+    error.status = HTTP_STATUS.BAD_REQUEST;
     return next(error);
   }
 
   if (!updateData || typeof updateData !== "object" || Array.isArray(updateData)) {
-    const error = new Error("Request body must be a valid JSON object with fields to update.");
-    error.status = 400;
+    const error = new Error("Request body empty or invalid.");
+    error.status = HTTP_STATUS.BAD_REQUEST;
     return next(error);
   }
 
@@ -33,7 +34,7 @@ router.put("/:id", async (req, res, next) => {
     const existingUser = await usersCollection.findOne({ _id: new ObjectId(id) });
     if (!existingUser) {
       const error = new Error(`User not found with _id: ${id}`);
-      error.status = 404;
+      error.status = HTTP_STATUS.NOT_FOUND;
       return next(error);
     }
 
@@ -48,8 +49,8 @@ router.put("/:id", async (req, res, next) => {
     }
 
     if (Object.keys(sanitizedData).length === 0) {
-      const error = new Error("No valid fields provided for update.");
-      error.status = 400;
+      const error = new Error("No valid fields provided.");
+      error.status = HTTP_STATUS.BAD_REQUEST;
       return next(error);
     }
 
@@ -60,14 +61,14 @@ router.put("/:id", async (req, res, next) => {
 
     if (result.modifiedCount === 0) {
       const error = new Error(`User with _id ${id} was not modified.`);
-      error.status = 400;
+      error.status = HTTP_STATUS.BAD_REQUEST;
       return next(error);
     }
 
     const updatedUser = await usersCollection.findOne({ _id: new ObjectId(id) });
 
     logger.info(`Successfully updated user with _id: ${id}`);
-    res.status(200).json({
+    res.status(HTTP_STATUS.OK).json({
       message: "User updated successfully.",
       updatedUser: {
         ...updatedUser,

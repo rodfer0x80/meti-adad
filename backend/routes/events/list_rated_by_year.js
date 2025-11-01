@@ -1,7 +1,8 @@
 import express from "express";
 
-import { getDatabase } from "../../database.js";
 import logger from "../../logger.js";
+import HTTP_STATUS from '../../http_status.js';
+import { getDatabase } from '../../database.js';
 
 
 const router = express.Router();
@@ -15,7 +16,7 @@ router.get("/:year(\\d{4})", async (req, res, next) => {
 
   if (isNaN(year) || year < 1900 || year > 3000) {
     const error = new Error(`Invalid year format: ${req.params.year}`);
-    error.status = 400;
+    error.status = HTTP_STATUS.BAD_REQUEST;
     return next(error);
   }
 
@@ -40,7 +41,7 @@ router.get("/:year(\\d{4})", async (req, res, next) => {
       .toArray();
 
     if (!eventRatings.length) {
-      return res.status(200).json({
+      return res.status(HTTP_STATUS.OK).json({
         year,
         page,
         limit,
@@ -69,7 +70,7 @@ router.get("/:year(\\d{4})", async (req, res, next) => {
       };
     });
 
-    res.status(200).json({
+    res.status(HTTP_STATUS.OK).json({
       year,
       page,
       limit,

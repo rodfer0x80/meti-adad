@@ -2,9 +2,11 @@
 [x] make custom endpoints 
 
 [x] clean up code and scripts
-[ ] add custom HTTP codes by name instead of number in errors.js
-[ ] make code semi-functionali (separate side effects from logic functions and variables)
-[ ] make database into utils.js and connection.js and move all endpoints db usage into utils and call them
+[x] add custom HTTP codes by name instead of number in errors.js
+[ ] user scoring of events should use event _id 
+[ ] script automate replacing the old id with _id
+[ ] script remove user custom id 
+[ ] test code backend is working with testdbdev
 
 [x] write documentation in backend API.md in docs 
 [x] make a requirements docs for each section 

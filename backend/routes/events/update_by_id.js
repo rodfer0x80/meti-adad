@@ -1,9 +1,9 @@
 import express from "express";
 import { ObjectId } from "mongodb";
 
-import { getDatabase } from "../../database.js";
 import logger from "../../logger.js";
-
+import HTTP_STATUS from '../../http_status.js';
+import { getDatabase } from '../../database.js';
 
 const router = express.Router();
 
@@ -15,13 +15,13 @@ router.put("/:id", async (req, res, next) => {
 
   if (!ObjectId.isValid(id)) {
     const error = new Error(`Invalid event ID format: ${id}`);
-    error.status = 400;
+    error.status = HTTP_STATUS.BAD_REQUEST;
     return next(error);
   }
 
   if (!updateData || typeof updateData !== "object" || Array.isArray(updateData)) {
-    const error = new Error("Request body must be a valid JSON object with fields to update.");
-    error.status = 400;
+    const error = new Error("Request body empty or invalid.");
+    error.status = HTTP_STATUS.BAD_REQUEST;
     return next(error);
   }
 
@@ -33,7 +33,7 @@ router.put("/:id", async (req, res, next) => {
     const existingEvent = await eventsCollection.findOne({ _id: new ObjectId(id) });
     if (!existingEvent) {
       const error = new Error(`Event not found with _id: ${id}`);
-      error.status = 404;
+      error.status = HTTP_STATUS.NOT_FOUND;
       return next(error);
     }
 
@@ -50,7 +50,7 @@ router.put("/:id", async (req, res, next) => {
 
     if (Object.keys(sanitizedData).length === 0) {
       const error = new Error("No valid fields provided for update.");
-      error.status = 400;
+      error.status = HTTP_STATUS.BAD_REQUEST;
       return next(error);
     }
 
@@ -61,14 +61,14 @@ router.put("/:id", async (req, res, next) => {
 
     if (result.modifiedCount === 0) {
       const error = new Error(`Event with _id ${id} was not modified.`);
-      error.status = 400;
+      error.status = HTTP_STATUS.BAD_REQUEST;
       return next(error);
     }
 
     const updatedEvent = await eventsCollection.findOne({ _id: new ObjectId(id) });
 
-    logger.info(`Successfully updated event with _id: ${id}`);
-    res.status(200).json({
+    logger.info(`Updated event with _id: ${id}`);
+    res.status(HTTP_STATUS.OK).json({
       message: "Event updated successfully.",
       updatedEvent: {
         ...updatedEvent,

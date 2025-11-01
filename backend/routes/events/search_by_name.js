@@ -1,7 +1,8 @@
 import express from "express";
 
-import { getDatabase } from "../../database.js";
 import logger from "../../logger.js";
+import HTTP_STATUS from '../../http_status.js';
+import { getDatabase } from '../../database.js';
 
 
 const router = express.Router();
@@ -14,7 +15,7 @@ router.get("/name", async (req, res, next) => {
   try {
     if (!k || typeof k !== "string" || k.trim().length === 0) {
       const err = new Error("Missing or invalid query parameter 'k'.");
-      err.status = 400;
+      err.status = HTTP_STATUS.BAD_REQUEST;
       throw err;
     }
 
@@ -40,7 +41,7 @@ router.get("/name", async (req, res, next) => {
       `Found ${events.length} events matching name "${keyword}" (total: ${total})`
     );
 
-    res.status(200).json({
+    res.status(HTTP_STATUS.OK).json({
       search: {
         keyword,
         page: parseInt(page),

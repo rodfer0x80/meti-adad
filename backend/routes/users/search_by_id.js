@@ -1,8 +1,9 @@
 import express from 'express';
 import { ObjectId } from 'mongodb';
 
-import { getDatabase } from '../../database.js';
 import logger from '../../logger.js';
+import HTTP_STATUS from '../../http_status.js';
+import { getDatabase } from '../../database.js';
 
 
 const router = express.Router();
@@ -14,7 +15,7 @@ router.get("/:id", async (req, res, next) => {
 
   if (!ObjectId.isValid(userId)) {
     const error = new Error(`Invalid user ID format: ${userId}`);
-    error.status = 400; 
+    error.status = HTTP_STATUS.BAD_REQUEST; 
     return next(error);
   }
 
@@ -26,7 +27,7 @@ router.get("/:id", async (req, res, next) => {
 
     if (!user) {
       const error = new Error(`User not found with ID: ${userId}`);
-      error.status = 404; 
+      error.status = HTTP_STATUS.NOT_FOUND; 
       return next(error);
     }
 
@@ -59,7 +60,7 @@ router.get("/:id", async (req, res, next) => {
       top_rated_events: topRatedEvents
     };
 
-    res.status(200).json(responseUser);
+    res.status(HTTP_STATUS.OK).json(responseUser);
 
   } catch (error) {
     logger.error(`Error fetching user ${userId}: ${error.message}`);

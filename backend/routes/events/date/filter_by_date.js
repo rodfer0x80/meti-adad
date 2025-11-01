@@ -1,7 +1,8 @@
 import express from "express";
 
-import { getDatabase } from "../../../database.js";
 import logger from "../../../logger.js";
+import HTTP_STATUS from '../../../http_status.js';
+import { getDatabase } from "../../../database.js";
 
 
 const router = express.Router();
@@ -36,13 +37,13 @@ router.get("/", async (req, res, next) => {
 
     if ((startDate && isNaN(startDate)) || (endDate && isNaN(endDate))) {
       const err = new Error("Invalid date parameters provided.");
-      err.status = 400;
+      err.status = HTTP_STATUS.BAD_REQUEST;
       throw err;
     }
 
     if (startDate && endDate && startDate > endDate) {
       const err = new Error("Start date cannot be after end date.");
-      err.status = 400;
+      err.status = HTTP_STATUS.BAD_REQUEST;
       throw err;
     }
 
@@ -74,7 +75,7 @@ router.get("/", async (req, res, next) => {
       `Found ${events.length} events between ${startDateStr || "∞"} and ${endDateStr || "∞"}`
     );
 
-    res.status(200).json({
+    res.status(HTTP_STATUS.OK).json({
       filters: {
         start_date: startDateStr || null,
         end_date: endDateStr || null,

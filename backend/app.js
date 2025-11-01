@@ -1,7 +1,7 @@
 import express from 'express';
 
-import { config } from './config.js';
 import logger from './logger.js'; 
+import HTTP_STATUS from './http_status.js';
 import { securityMiddleware } from './middleware/security.js';
 import { loggingMiddleware } from './middleware/logging.js';
 
@@ -27,10 +27,8 @@ import users_delete_by_id from './routes/users/delete_by_id.js'
 import users_nearby_events_in_user_range from './routes/users/nearby/events_in_user_range.js'
 
 
-// #TODO: remove this
-// const { HOST, PORT } = config;
-
 const app = express();
+
 
 /**
  * Middleware 
@@ -39,6 +37,7 @@ app.use(loggingMiddleware);
 app.use(express.json());
 app.set('trust proxy', 1);
 app.use(securityMiddleware);
+
 
 /**
  * API ROUTES
@@ -64,27 +63,25 @@ app.use("/users", users_search_by_id);
 app.use("/users", users_update_by_id);
 app.use("/users", users_delete_by_id);
 
+
 /**
  * Error handling
  */
-//#NOTE: Endpoints > 4xx > 5xx
-// Handle 404 
 app.use((req, res, next) => {
   const error = new Error(`Resource Not Found: ${req.originalUrl}`);
-  error.status = 404;
+  error.status = HTTP_STATUS.NOT_FOUND;
   next(error);
 });
 
-// Handle 5xx 
 app.use((err, req, res, next) => {
-  const status = err.status || 500;
+  const status = err.status || HTTP_STATUS.INTERNAL_SERVER_ERROR;
   const message = err.message || 'An unexpected server error occurred.';
 
-  if (status >= 500) {
+  if (status >= HTTP_STATUS.INTERNAL_SERVER_ERROR) {
     logger.error(`Server Error [${status}]: ${message}`);
-    logger.error(`Client Error: ${err.stack}`);
+    logger.error(err.stack);
   } else {
-    logger.warn(`Warning: [${status}]: ${message}`);
+    logger.warn(`Client Error [${status}]: ${message}`);
   }
 
   res.status(status).json({

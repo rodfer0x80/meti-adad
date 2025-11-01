@@ -1,8 +1,9 @@
 import express from "express";
 import { ObjectId } from "mongodb";
 
-import { getDatabase } from "../../../database.js";
-import logger from "../../../logger.js";
+import logger from '../../../logger.js';
+import HTTP_STATUS from '../../../http_status.js';
+import { getDatabase } from '../../../database.js';
 
 
 const router = express.Router();
@@ -32,7 +33,7 @@ router.get("/:id", async (req, res, next) => {
 
   try {
     if (!ObjectId.isValid(id)) {
-      throw Object.assign(new Error(`Invalid user _id: ${id}`), { status: 400 });
+      throw Object.assign(new Error(`Invalid user _id: ${id}`), { status: HTTP_STATUS.BAD_REQUEST });
     }
 
     const usersCollection = db.collection("users");
@@ -40,15 +41,15 @@ router.get("/:id", async (req, res, next) => {
 
     const user = await usersCollection.findOne({ _id: new ObjectId(id) });
     if (!user) {
-      throw Object.assign(new Error(`User not found: ${id}`), { status: 404 });
+      throw Object.assign(new Error(`User not found: ${id}`), { status: HTTP_STATUS.BAD_REQUEST });
     }
 
     const userLatitude = latitude ? parseFloat(latitude) : parseFloat(user.latitude);
     const userLongitude = longitude ? parseFloat(longitude) : parseFloat(user.longitude);
     const searchRadiusKm = parseFloat(radius);
 
+    // #NOTE: Is the interpreter smart enough to make this lazy? Or is it all loaded into memory?
     const allEvents = await eventsCollection.find({}).toArray();
-
     const nearbyEvents = allEvents
       .map((event) => {
         const eLat = parseFloat(event.latitude);
@@ -72,7 +73,7 @@ router.get("/:id", async (req, res, next) => {
       `Found ${nearbyEvents.length} nearby events within ${radius} km`
     );
 
-    res.status(200).json({
+    res.status(HTTP_STATUS.OK).json({
       user: { _id: id, latitude: userLatitude, longitude: userLongitude, radius_km: searchRadiusKm },
       count: nearbyEvents.length,
       page: parseInt(page),

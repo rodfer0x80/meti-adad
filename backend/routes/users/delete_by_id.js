@@ -2,6 +2,7 @@ import express from 'express';
 import { ObjectId } from 'mongodb';
 
 import logger from '../../logger.js';
+import HTTP_STATUS from '../../http_status.js';
 import { getDatabase } from '../../database.js';
 
 
@@ -14,7 +15,7 @@ router.delete("/:id", async (req, res, next) => {
 
   if (!ObjectId.isValid(userId)) {
     const error = new Error(`Invalid user ID format: ${userId}`);
-    error.status = 400; 
+    error.status = HTTP_STATUS.BAD_REQUEST; 
     return next(error);
   }
 
@@ -25,12 +26,12 @@ router.delete("/:id", async (req, res, next) => {
 
     if (result.deletedCount === 0) {
       const error = new Error(`User not found with ID: ${userId}`);
-      error.status = 404;
+      error.status = HTTP_STATUS.NOT_FOUND;
       return next(error);
     }
 
     logger.info(`Successfully deleted user: ${userId}`);
-    res.status(204).send() 
+    res.status(HTTP_STATUS.NO_CONTENT).send() 
 
   } catch (error) {
     logger.error(`Error deleting user ${userId}: ${error.message}`);

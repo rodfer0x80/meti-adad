@@ -1,8 +1,9 @@
 import express from "express";
 import { ObjectId } from "mongodb";
 
-import { getDatabase } from "../../database.js";
-import logger from "../../logger.js";
+import logger from '../../logger.js';
+import HTTP_STATUS from '../../http_status.js';
+import { getDatabase } from '../../database.js';
 
 
 const router = express.Router();
@@ -16,14 +17,14 @@ router.post("/:id/review/:event_id", async (req, res, next) => {
   try {
     if (!ObjectId.isValid(id)) {
       const err = new Error(`Invalid user _id format: ${id}`);
-      err.status = 400;
+      err.status = HTTP_STATUS.BAD_REQUEST;
       throw err;
     }
 
     const parsedScore = parseInt(score, 10);
     if (isNaN(parsedScore) || parsedScore < 1 || parsedScore > 5) {
       const err = new Error(`Invalid score: ${score}. Must be between 1 and 5.`);
-      err.status = 400;
+      err.status = HTTP_STATUS.BAD_REQUEST;
       throw err;
     }
 
@@ -33,7 +34,7 @@ router.post("/:id/review/:event_id", async (req, res, next) => {
     const user = await usersCollection.findOne({ _id: new ObjectId(id) });
     if (!user) {
       const err = new Error(`User not found with _id: ${id}`);
-      err.status = 404;
+      err.status = HTTP_STATUS.NOT_FOUND;
       throw err;
     }
 
@@ -45,7 +46,7 @@ router.post("/:id/review/:event_id", async (req, res, next) => {
     });
     if (!event) {
       const err = new Error(`Event not found with id: ${event_id}`);
-      err.status = 404;
+      err.status = HTTP_STATUS.NOT_FOUND;
       throw err;
     }
 
@@ -63,7 +64,7 @@ router.post("/:id/review/:event_id", async (req, res, next) => {
       logger.info(
         `Updated existing review: user ${id}, event ${eventIdStr}, score ${parsedScore}`
       );
-      res.status(200).json({
+      res.status(HTTP_STATUS.OK).json({
         message: `Updated score for event ${eventIdStr} to ${parsedScore}.`,
       });
     } else {
@@ -78,7 +79,7 @@ router.post("/:id/review/:event_id", async (req, res, next) => {
       logger.info(
         `Added new review: user ${id}, event ${eventIdStr}, score ${parsedScore}`
       );
-      res.status(201).json({
+      res.status(HTTP_STATUS.CREATED).json({
         message: `Added new review for event ${eventIdStr} with score ${parsedScore}.`,
       });
     }

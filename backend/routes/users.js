@@ -1,8 +1,8 @@
-import { ObjectId } from "mongodb";
 import express from "express";
 
-import { getDatabase } from "../database.js";
 import logger from "../logger.js";
+import HTTP_STATUS from "../http_status.js";
+import { getDatabase } from "../database.js";
 
 
 const router = express.Router();
@@ -10,7 +10,7 @@ const router = express.Router();
 
 const validateUser = (user) => {
   const nome = user.nome;
-  if (!nome || typeof nome !== "string") return "Missing or invalid 'nome'/'nome'.";
+  if (!nome || typeof nome !== "string") return "Empty or invalid field";
   return null;
 };
 
@@ -54,7 +54,7 @@ router.get("/", async (req, res, next) => {
     const totalUsers = await usersCollection.countDocuments({});
     const totalPages = Math.ceil(totalUsers / limit);
 
-    res.status(200).json({
+    res.status(HTTP_STATUS.OK).json({
       page,
       limit,
       totalPages,
@@ -62,8 +62,8 @@ router.get("/", async (req, res, next) => {
       data: jsonResults,
     });
   } catch (error) {
-    logger.error("Error fetching paginated users:", error.message);
-    error.status = 500;
+    logger.error("Error fetching users:", error.message);
+    error.status = HTTP_STATUS.INTERNAL_SERVER_ERROR;
     next(error);
   }
 });
@@ -73,8 +73,8 @@ router.post("/", async (req, res, next) => {
   const data = req.body;
 
   if (!data || (Array.isArray(data) && data.length === 0)) {
-    const error = new Error("Request body must contain user data (single object or array).");
-    error.status = 400;
+    const error = new Error("Request body empty or invalid");
+    error.status = HTTP_STATUS.BAD_REQUEST;
     return next(error);
   }
 
@@ -86,7 +86,7 @@ router.post("/", async (req, res, next) => {
         const validationError = validateUser(user);
         if (validationError) {
           const error = new Error(validationError);
-          error.status = 400;
+          error.status = HTTP_STATUS.BAD_REQUEST;
           throw error;
         }
       }
@@ -95,7 +95,7 @@ router.post("/", async (req, res, next) => {
       const result = await usersCollection.insertMany(standardizedUsers);
 
       logger.info(`Successfully added ${result.insertedCount} users.`);
-      return res.status(201).json({
+      return res.status(HTTP_STATUS.CREATED).json({
         message: `${result.insertedCount} users created successfully.`,
         insertedIds: Object.values(result.insertedIds),
       });
@@ -104,7 +104,7 @@ router.post("/", async (req, res, next) => {
     const validationError = validateUser(data);
     if (validationError) {
       const error = new Error(validationError);
-      error.status = 400;
+      error.status = HTTP_STATUS.BAD_REQUEST;
       throw error;
     }
 
@@ -113,17 +113,17 @@ router.post("/", async (req, res, next) => {
     const result = await usersCollection.insertOne(standardizedUser);
     const insertedId = result.insertedId.toString();
 
-    logger.info(`Successfully added one user: ${insertedId}`);
-    res.status(201).json({
+    logger.info(`Inserted one user: ${insertedId}`);
+    res.status( HTTP_STATUS.CREATED).json({
       message: "User created successfully.",
       insertedId,
     });
   } catch (error) {
     if (error.code === 11000) {
-      error.status = 400;
-      error.message = "Duplicate key error (user already exists).";
+      error.status =  HTTP_STATUS.BAD_REQUEST;
+      error.message = "Duplicate key error.";
     }
-    logger.error(`Error adding users: ${error.message}`);
+    logger.error(`Error inserting users: ${error.message}`);
     next(error);
   }
 });

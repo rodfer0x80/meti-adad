@@ -1,7 +1,8 @@
 import express from "express";
 
-import { getDatabase } from "../../database.js";
 import logger from "../../logger.js";
+import HTTP_STATUS from '../../http_status.js';
+import { getDatabase } from '../../database.js';
 
 
 const router = express.Router();
@@ -29,7 +30,7 @@ router.get("/free", async (req, res, next) => {
 
     logger.info(`Found ${events.length} free events.`);
 
-    res.status(200).json({
+    res.status(HTTP_STATUS.OK).json({
       count: events.length,
       events,
     });

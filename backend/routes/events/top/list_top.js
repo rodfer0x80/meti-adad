@@ -1,8 +1,8 @@
 import express from "express";
 
-import { getDatabase } from "../../../database.js";
 import logger from "../../../logger.js";
-
+import HTTP_STATUS from '../../../http_status.js';
+import { getDatabase } from "../../../database.js";
 
 const router = express.Router();
 
@@ -14,7 +14,7 @@ router.get("/:limit", async (req, res, next) => {
 
   if (isNaN(limitParam) || limitParam <= 0) {
     const error = new Error("Limit must be a positive integer.");
-    error.status = 400;
+    error.status = HTTP_STATUS.BAD_REQUEST;
     return next(error);
   }
 
@@ -42,7 +42,7 @@ router.get("/:limit", async (req, res, next) => {
       .toArray();
 
     if (!eventRatings.length) {
-      return res.status(200).json({
+      return res.status(HTTP_STATUS.OK).json({
         page,
         limit,
         count: 0,
@@ -65,7 +65,7 @@ router.get("/:limit", async (req, res, next) => {
       };
     }).filter(Boolean);
 
-    res.status(200).json({
+    res.status(HTTP_STATUS.OK).json({
       page,
       limit,
       count: results.length,

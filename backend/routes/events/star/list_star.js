@@ -1,7 +1,8 @@
 import express from "express";
 
-import { getDatabase } from "../../../database.js";
 import logger from "../../../logger.js";
+import HTTP_STATUS from '../../../http_status.js';
+import { getDatabase } from "../../../database.js";
 
 
 const router = express.Router();
@@ -39,7 +40,7 @@ router.get("/", async (req, res, next) => {
       .toArray();
 
     if (!ratings.length) {
-      return res.status(200).json({
+      return res.status(HTTP_STATUS.OK).json({
         page,
         limit,
         totalPages: 0,
@@ -65,7 +66,7 @@ router.get("/", async (req, res, next) => {
     const totalPages = Math.ceil(totalEvents / limit);
     const paginated = merged.slice(skip, skip + limit);
 
-    res.status(200).json({
+    res.status(HTTP_STATUS.OK).json({
       page,
       limit,
       totalPages,

@@ -1,7 +1,8 @@
 import express from "express";
 
-import { getDatabase } from "../../../database.js";
 import logger from "../../../logger.js";
+import HTTP_STATUS from '../../../http_status.js';
+import { getDatabase } from "../../../database.js";
 
 
 const router = express.Router();
@@ -22,7 +23,7 @@ router.get("/:order", async (req, res, next) => {
 
     if (!sortOrder) {
       const error = new Error(`Invalid order parameter: ${order}. Use 'asc' or 'desc'.`);
-      error.status = 400;
+      error.status = HTTP_STATUS.BAD_REQUEST;
       return next(error);
     }
 
@@ -69,7 +70,7 @@ router.get("/:order", async (req, res, next) => {
     const totalPages = Math.ceil(totalEvents / limit);
     const paginated = enrichedEvents.slice(skip, skip + limit);
 
-    res.status(200).json({
+    res.status(HTTP_STATUS.OK).json({
       page,
       limit,
       totalPages,

@@ -1,8 +1,9 @@
 import express from 'express';
 import { ObjectId } from 'mongodb';
 
+import logger from "../../logger.js";
+import HTTP_STATUS from '../../http_status.js';
 import { getDatabase } from '../../database.js';
-import logger from '../../logger.js';
 
 
 const router = express.Router();
@@ -14,7 +15,7 @@ router.delete("/:id", async (req, res, next) => {
 
   if (!ObjectId.isValid(eventId)) {
     const error = new Error(`Invalid event ID format: ${eventId}`);
-    error.status = 400;
+    error.status = HTTP_STATUS.BAD_REQUEST;
     return next(error);
   }
 
@@ -25,12 +26,12 @@ router.delete("/:id", async (req, res, next) => {
 
     if (result.deletedCount === 0) {
       const error = new Error(`Event not found with ID: ${eventId}`);
-      error.status = 404;
+      error.status = HTTP_STATUS.NOT_FOUND;
       return next(error);
     }
 
     logger.info(`Successfully deleted event: ${eventId}`);
-    res.status(204).send() 
+    res.status(HTTP_STATUS.NO_CONTENT).send() 
 
   } catch (error) {
     logger.error(`Error deleting event ${eventId}: ${error.message}`);

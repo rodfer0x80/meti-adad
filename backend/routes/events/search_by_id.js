@@ -1,8 +1,9 @@
 import { ObjectId } from "mongodb";
 import express from 'express';
 
+import logger from "../../logger.js";
+import HTTP_STATUS from '../../http_status.js';
 import { getDatabase } from '../../database.js';
-import logger from '../../logger.js';
 
 
 const router = express.Router();
@@ -14,7 +15,7 @@ router.get("/:id", async (req, res, next) => {
 
   if (!ObjectId.isValid(mongoIdParam)) {
     const error = new Error(`Invalid MongoDB ObjectId format: ${mongoIdParam}`);
-    error.status = 400;
+    error.status = HTTP_STATUS.BAD_REQUEST;
     return next(error);
   }
 
@@ -25,7 +26,7 @@ router.get("/:id", async (req, res, next) => {
 
     if (!event) {
       const error = new Error(`Event not found with _id: ${mongoIdParam}`);
-      error.status = 404;
+      error.status = HTTP_STATUS.NOT_FOUND;
       return next(error);
     }
 
@@ -56,7 +57,7 @@ router.get("/:id", async (req, res, next) => {
       average_score: averageScore
     };
 
-    res.status(200).json(finalOutput);
+    res.status(HTTP_STATUS.OK).json(finalOutput);
 
   } catch (error) {
     logger.error(`Error fetching event by _id ${mongoIdParam} and calculating score:`, error.message);
