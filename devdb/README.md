@@ -1,9 +1,10 @@
 # database
 > mongodb
+
 ```
 >> REQUIREMENTS
 docker
-docker-compose
+bash
 ```
 
 ```
