@@ -107,11 +107,3 @@ DB_NAME="adad_db"
     Params:
         NULL
 ```
-
-
-```
->> DATABASE
-events
-
-users 
-```
