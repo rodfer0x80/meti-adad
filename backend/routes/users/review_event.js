@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.post("/:id/review/:event_id", async (req, res, next) => {
   const db = getDatabase();
-  const { id, event_id } = req.params;
+  const { id, event_id } = req.params; 
   const { score } = req.query;
 
   try {
@@ -20,6 +20,13 @@ router.post("/:id/review/:event_id", async (req, res, next) => {
       err.status = HTTP_STATUS.BAD_REQUEST;
       throw err;
     }
+
+    if (!ObjectId.isValid(event_id)) {
+      const err = new Error(`Invalid event _id format: ${event_id}`);
+      err.status = HTTP_STATUS.BAD_REQUEST;
+      throw err;
+    }
+    const eventObjectId = new ObjectId(event_id);
 
     const parsedScore = parseInt(score, 10);
     if (isNaN(parsedScore) || parsedScore < 1 || parsedScore > 5) {
@@ -38,23 +45,21 @@ router.post("/:id/review/:event_id", async (req, res, next) => {
       throw err;
     }
 
-    const event = await eventsCollection.findOne({
-      $or: [
-        { id: event_id },
-        { id: parseInt(event_id, 10) }
-      ]
-    });
+    const event = await eventsCollection.findOne({ _id: eventObjectId });
     if (!event) {
-      const err = new Error(`Event not found with id: ${event_id}`);
+      const err = new Error(`Event not found with _id: ${event_id}`);
       err.status = HTTP_STATUS.NOT_FOUND;
       throw err;
     }
 
-    const eventIdStr = event_id.toString();
-
     const existingReview = user.event_scores?.find(
-      (entry) => entry.event_id.toString() === eventIdStr
+      (entry) => {
+        const entryId = entry.event_id instanceof ObjectId ? entry.event_id.toHexString() : entry.event_id.toString();
+        return entryId === event_id;
+      }
     );
+    
+    const eventIdStr = event_id; 
 
     if (existingReview) {
       await usersCollection.updateOne(
@@ -62,7 +67,7 @@ router.post("/:id/review/:event_id", async (req, res, next) => {
         { $set: { "event_scores.$.score": parsedScore } }
       );
       logger.info(
-        `Updated existing review: user ${id}, event ${eventIdStr}, score ${parsedScore}`
+        `Updated review: user ${id}, event ${eventIdStr}, score ${parsedScore}`
       );
       res.status(HTTP_STATUS.OK).json({
         message: `Updated score for event ${eventIdStr} to ${parsedScore}.`,
@@ -72,19 +77,19 @@ router.post("/:id/review/:event_id", async (req, res, next) => {
         { _id: user._id },
         {
           $push: {
-            event_scores: { event_id: eventIdStr, score: parsedScore },
+            event_scores: { event_id: eventObjectId, score: parsedScore }, 
           },
         }
       );
       logger.info(
-        `Added new review: user ${id}, event ${eventIdStr}, score ${parsedScore}`
+        `Inserted review: user ${id}, event ${eventIdStr}, score ${parsedScore}`
       );
       res.status(HTTP_STATUS.CREATED).json({
-        message: `Added new review for event ${eventIdStr} with score ${parsedScore}.`,
+        message: `Inserted review for event ${eventIdStr} with score ${parsedScore}.`,
       });
     }
   } catch (error) {
-    logger.error(`Error adding/updating review: ${error.message}`);
+    logger.error(`Error inserting/updating review: ${error.message}`);
     next(error);
   }
 });

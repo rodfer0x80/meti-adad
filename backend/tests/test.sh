@@ -148,7 +148,7 @@ echo "[14] Fetching GET /events/2025"
 fetch GET "$API/events/2025?page=1&limit=10" "$WORKDIR/get_list_rated_events_by_year.txt"
 
 echo "[15] Fetching POST /users/:id/review/:event_id"
-fetch POST "$API/users/${INSERTED_USER_ID}/review/72704?score=5" "$WORKDIR/post_users_review_event.txt"
+fetch POST "$API/users/${INSERTED_USER_ID}/review/${INSERTED_EVENT_ID}?score=5" "$WORKDIR/post_users_review_event.txt"
 
 echo "[C1] Fetching GET /users/nearby/:id"
 fetch GET "$API/users/nearby/$INSERTED_USER_ID?latitude=39.646&longitude=-8.628&radius=4" "$WORKDIR/get_users_nearby_events_from_user.txt"
