@@ -58,9 +58,9 @@ INSERTED_EVENT_ID=$(curl -s -X POST "$API/events" \
   -d @"$TMP_EVENT_JSON" | jq -r '.insertedId')
 
 if [ -z "$INSERTED_EVENT_ID" ] || [ "$INSERTED_EVENT_ID" = "null" ]; then
-  echo "❌ POST /events failed." > "$WORKDIR/post_events.txt"
+  echo "POST /events failed." > "$WORKDIR/post_events.txt"
 else
-  echo "✅ Event created: $INSERTED_EVENT_ID" > "$WORKDIR/post_events.txt"
+  echo "Event created: $INSERTED_EVENT_ID" > "$WORKDIR/post_events.txt"
 fi
 rm "$TMP_EVENT_JSON"
 
