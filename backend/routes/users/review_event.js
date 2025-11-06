@@ -53,39 +53,34 @@ router.post("/:id/review/:event_id", async (req, res, next) => {
     }
 
     const existingReview = user.event_scores?.find(
-      (entry) => {
-        const entryId = entry.event_id instanceof ObjectId ? entry.event_id.toHexString() : entry.event_id.toString();
-        return entryId === event_id;
-      }
+      (entry) => entry.event_id === event_id 
     );
-    
-    const eventIdStr = event_id; 
-
+     
     if (existingReview) {
       await usersCollection.updateOne(
-        { _id: user._id, "event_scores.event_id": existingReview.event_id },
+        { _id: user._id, "event_scores.event_id": event_id },
         { $set: { "event_scores.$.score": parsedScore } }
       );
       logger.info(
-        `Updated review: user ${id}, event ${eventIdStr}, score ${parsedScore}`
+        `Updated review: user ${id}, event ${event_id}, score ${parsedScore}`
       );
       res.status(HTTP_STATUS.OK).json({
-        message: `Updated score for event ${eventIdStr} to ${parsedScore}.`,
+        message: `Updated score for event ${event_id} to ${parsedScore}.`,
       });
     } else {
       await usersCollection.updateOne(
         { _id: user._id },
         {
           $push: {
-            event_scores: { event_id: eventObjectId, score: parsedScore }, 
+            event_scores: { event_id: event_id, score: parsedScore }, 
           },
         }
       );
       logger.info(
-        `Inserted review: user ${id}, event ${eventIdStr}, score ${parsedScore}`
+        `Inserted review: user ${id}, event ${event_id}, score ${parsedScore}`
       );
       res.status(HTTP_STATUS.CREATED).json({
-        message: `Inserted review for event ${eventIdStr} with score ${parsedScore}.`,
+        message: `Inserted review for event ${event_id} with score ${parsedScore}.`,
       });
     }
   } catch (error) {
