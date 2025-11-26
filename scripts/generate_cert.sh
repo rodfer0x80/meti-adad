@@ -15,4 +15,4 @@ openssl req -x509 -nodes -days $DAYS_VALID -newkey rsa:2048 \
   -subj "/CN=$DOMAIN/O=adad/OU=dev"
 
 echo "Certificate and key created in $CERT_DIR:"
-la -lha $CERT_DIR
+ls -lha $CERT_DIR
