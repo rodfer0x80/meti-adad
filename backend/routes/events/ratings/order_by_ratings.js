@@ -1,12 +1,10 @@
 import express from "express";
-
+import { ObjectId } from 'mongodb';
 import logger from "../../../logger.js";
 import HTTP_STATUS from '../../../http_status.js';
 import { getDatabase } from "../../../database.js";
 
-
 const router = express.Router();
-
 
 router.get("/:order", async (req, res, next) => {
   const db = getDatabase();
@@ -37,6 +35,7 @@ router.get("/:order", async (req, res, next) => {
     const usersCollection = db.collection("users");
     const eventsCollection = db.collection("events");
 
+    // 1. Aggregate Ratings from Users Collection
     const eventRatings = await usersCollection
       .aggregate([
         { $unwind: "$event_scores" },
@@ -50,11 +49,16 @@ router.get("/:order", async (req, res, next) => {
       ])
       .toArray();
 
-    const eventIds = eventRatings.map((r) => r._id);
-    const events = await eventsCollection.find({ id: { $in: eventIds } }).toArray();
+    // 2. Fetch All Events (To ensure we list events even if they have 0 ratings)
+    // If you ONLY want rated events, use: { _id: { $in: eventRatings.map(r => new ObjectId(r._id)) } }
+    // But usually, a list should show unrated events too (with 0 score)
+    const allEvents = await eventsCollection.find({}).toArray();
 
-    const enrichedEvents = events.map((event) => {
-      const ratingInfo = eventRatings.find((r) => r._id === event.id);
+    // 3. Enrich Events with Rating Data
+    const enrichedEvents = allEvents.map((event) => {
+      // Robust compare: ensure both are strings
+      const ratingInfo = eventRatings.find((r) => String(r._id) === String(event._id));
+      
       return {
         ...event,
         avg_rating: ratingInfo ? ratingInfo.avg_rating : 0,
@@ -62,9 +66,18 @@ router.get("/:order", async (req, res, next) => {
       };
     });
 
-    enrichedEvents.sort((a, b) =>
-      sortOrder === 1 ? a.avg_rating - b.avg_rating : b.avg_rating - a.avg_rating
-    );
+    // 4. Sort in Memory
+    enrichedEvents.sort((a, b) => {
+        if (a.avg_rating === b.avg_rating) {
+            // Secondary sort by review count if ratings are equal
+            return sortOrder === 1 
+                ? a.review_count - b.review_count 
+                : b.review_count - a.review_count;
+        }
+        return sortOrder === 1 
+            ? a.avg_rating - b.avg_rating 
+            : b.avg_rating - a.avg_rating;
+    });
 
     const totalEvents = enrichedEvents.length;
     const totalPages = Math.ceil(totalEvents / limit);
@@ -82,6 +95,5 @@ router.get("/:order", async (req, res, next) => {
     next(error);
   }
 });
-
 
 export default router;

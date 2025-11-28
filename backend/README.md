@@ -14,10 +14,10 @@ METI ADAD Project
 >> ENV VARIABLES CONFIGURATION 
 
 # Local (example)
-HOST="0.0.0.0" 
+HOST="127.0.0.1" 
 PORT="5000"
-DB_HOST="router" 
-DB_PORT="27020"
+DB_HOST="127.0.0.1" 
+DB_PORT="27017"
 DB_NAME="adad_db"
 ```
 

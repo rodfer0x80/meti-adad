@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from "cors";
 
 import logger from './logger.js'; 
 import HTTP_STATUS from './http_status.js';
@@ -37,7 +38,7 @@ app.use(loggingMiddleware);
 app.use(express.json());
 app.set('trust proxy', 1);
 app.use(securityMiddleware);
-
+app.use(cors());
 
 /**
  * API ROUTES

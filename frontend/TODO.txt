@@ -1,2 +1,0 @@
-[ ] better /home UI 
-[ ] cleanup code struct and comments

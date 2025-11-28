@@ -5,9 +5,7 @@ import logger from '../../logger.js';
 import HTTP_STATUS from '../../http_status.js';
 import { getDatabase } from '../../database.js';
 
-
 const router = express.Router();
-
 
 router.get("/:id", async (req, res, next) => {
   const db = getDatabase();
@@ -31,24 +29,33 @@ router.get("/:id", async (req, res, next) => {
       return next(error);
     }
 
-    const topScores = user.event_scores
+    // 1. Get Top 3 Scores
+    // Safety check: ensure event_scores exists before sorting
+    const scores = user.event_scores || [];
+    const topScores = scores
       .sort((a, b) => b.score - a.score)
       .slice(0, 3);
 
-    const topEventIds = topScores.map(score => score.event_id);
+    // 2. Convert string IDs to MongoDB ObjectIds
+    const topEventIds = topScores.map(score => new ObjectId(score.event_id));
 
+    // 3. Fetch Event Details (Query by _id, not id)
     const topEvents = await eventsCollection.find(
-      { id: { $in: topEventIds } },
-      { projection: { id: 1, _id: 1 } }
+      { _id: { $in: topEventIds } },
+      { projection: { nome_atividade: 1, tipologia: 1, _id: 1 } } // Fetch Name and Type
     ).toArray();
 
+    // 4. Merge Score with Event Details
     const topRatedEvents = topScores.map(scoreItem => {
-      const eventDetail = topEvents.find(event => event.id === scoreItem.event_id);
+      // Compare as strings to ensure match
+      const eventDetail = topEvents.find(event => event._id.toString() === scoreItem.event_id);
 
       if (eventDetail) {
         return {
-          _id: eventDetail._id.toHexString(),
-          user_score: scoreItem.score,
+          event_id: eventDetail._id.toString(),
+          nome_atividade: eventDetail.nome_atividade, // Now available!
+          tipologia: eventDetail.tipologia,
+          score: scoreItem.score,
         };
       }
       return null;
@@ -56,7 +63,7 @@ router.get("/:id", async (req, res, next) => {
 
     const responseUser = {
       ...user,
-      event_scores: undefined, 
+      // event_scores: undefined, // REMOVED: Keep this so the frontend list works!
       top_rated_events: topRatedEvents
     };
 
@@ -67,6 +74,5 @@ router.get("/:id", async (req, res, next) => {
     next(error);
   }
 });
-
 
 export default router;
