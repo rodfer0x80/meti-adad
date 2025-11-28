@@ -58,7 +58,7 @@ services:
       - ./backend:/app
       - /app/node_modules
     env_file:
-      - ./.env 
+      - ./backend.env 
     expose:
       - 5000
     networks:
@@ -71,6 +71,8 @@ services:
       context: .
       dockerfile: Dockerfile.frontend
     container_name: adad-frontend
+    env_file:
+      - ./frontend.env 
     command: npm run start
     volumes:
       - ./frontend:/app
